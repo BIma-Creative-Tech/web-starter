@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Animasi intro hero dengan anime.js v4 (subpath modular, di-import dinamis).
+ * Animasi intro hero dengan anime.js v4 (subpath modular `scope`/`waapi`/`utils`, di-import dinamis).
  * - Dimulai saat IDLE (requestIdleCallback + fallback) → di luar jendela TBT; teks hero sudah
  *   tampil penuh sejak first paint (LCP tidak menunggu JS). Intro hanya "aksen": garis bawah
  *   digambar (scaleX), badge/CTA/kartu diberi gerak lift singkat dari posisi akhirnya.
@@ -21,23 +21,45 @@ export function HeroAnimator({ children, className }: { children: React.ReactNod
   useEffect(() => {
     let cancelled = false;
     const cancelIdle = onIdle(() => {
-      void Promise.all([import("animejs/scope"), import("animejs/timeline"), import("animejs/utils")]).then(
-        ([{ createScope }, { createTimeline }, { stagger }]) => {
+      void Promise.all([import("animejs/scope"), import("animejs/waapi"), import("animejs/utils")]).then(
+        ([{ createScope }, { waapi }, { stagger }]) => {
           if (cancelled || !root.current) return;
           scope.current = createScope({
             root,
             mediaQueries: { reduce: "(prefers-reduced-motion: reduce)" },
           }).add((self) => {
             if (self?.matches.reduce) return;
+            const el = root.current;
+            if (!el) return;
             // anime.js mengambil alih garis bawah → matikan fallback CSS-nya.
-            root.current
-              ?.querySelectorAll<HTMLElement>('[data-hero-init="underline"]')
-              .forEach((el) => (el.style.animation = "none"));
-            createTimeline({ defaults: { ease: "outExpo", duration: 900 } })
-              .add('[data-hero-init="underline"]', { scaleX: [0, 1], duration: 1100 })
-              .add('[data-hero-init="badge"]', { translateY: [0, -4, 0], duration: 700 }, "-=900")
-              .add('[data-hero-init="cta"]', { translateY: [0, -6, 0], delay: stagger(90), duration: 800 }, "-=600")
-              .add('[data-hero-init="card"]', { translateY: [0, -12, 0], delay: stagger(140), duration: 1000 }, "-=800");
+            const underline = el.querySelectorAll<HTMLElement>('[data-hero-init="underline"]');
+            underline.forEach((u) => (u.style.animation = "none"));
+            // anime.js WAAPI adapter: transform dijalankan browser di thread compositor
+            // (tanpa kerja main-thread per frame, terukur mengurangi TBT dibanding engine JS).
+            waapi.animate(underline, {
+              transform: ["scaleX(0)", "scaleX(1)"],
+              duration: 1100,
+              ease: "outExpo",
+              persist: true,
+            });
+            waapi.animate('[data-hero-init="badge"]', {
+              transform: ["translateY(0px)", "translateY(-4px)", "translateY(0px)"],
+              duration: 700,
+              delay: 200,
+              ease: "outExpo",
+            });
+            waapi.animate('[data-hero-init="cta"]', {
+              transform: ["translateY(0px)", "translateY(-6px)", "translateY(0px)"],
+              duration: 800,
+              delay: stagger(90, { start: 500 }),
+              ease: "outExpo",
+            });
+            waapi.animate('[data-hero-init="card"]', {
+              transform: ["translateY(0px)", "translateY(-12px)", "translateY(0px)"],
+              duration: 1000,
+              delay: stagger(140, { start: 700 }),
+              ease: "outExpo",
+            });
           });
         },
       );

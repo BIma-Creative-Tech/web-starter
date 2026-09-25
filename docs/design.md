@@ -55,7 +55,7 @@ Heading `text-wrap: balance`, body 16px / line-height 1.6.
 
 | Lapisan | Library | Perilaku | Reduced motion |
 |---|---|---|---|
-| Intro hero (garis bawah digambar, lift singkat badge/CTA/kartu) | **anime.js 4.5.0** `createTimeline` + `stagger`, `createScope` (subpath modular, import dinamis, **mulai saat idle**) | sekali; teks hero TIDAK disembunyikan (LCP tidak menunggu JS) | dilewati (`scope.matches`) |
+| Intro hero (garis bawah digambar, lift singkat badge/CTA/kartu) | **anime.js 4.5.0** `waapi.animate` + `stagger`, `createScope` (subpath modular, import dinamis, **mulai saat idle**; adapter WAAPI → transform di thread compositor) | sekali; teks hero TIDAK disembunyikan (LCP tidak menunggu JS) | dilewati (`scope.matches`) |
 | Gerak ambient (orb, kartu melayang) | CSS keyframes (compositor) | loop pelan; **hanya ≥ 768px** — mobile memakai gradien statis (keputusan user 2026-09-25) | `motion-reduce:animate-none` |
 | Scroll reveal section | CSS transition (opacity + transform), dipicu `<ScrollEnhancer>` (IntersectionObserver, mulai saat idle) | fade + naik 24px, sekali | tidak dijalankan |
 | Angka statistik | Number Ticker — spring **Motion 13.4.3** `animate()` (import dinamis saat terlihat) | saat masuk viewport | nilai akhir langsung |
