@@ -42,7 +42,8 @@ Ditolak/tidak dipakai: **Border Beam** (MIT, author sama) — menganimasikan `of
   via `animate()` Motion yang di-import dinamis (bukan `useSpring`) — alasan performa terukur.
 - **Animated Grid Pattern**: kotak berkedip dirender sebagai elemen HTML + CSS keyframes opacity
   (compositor) alih-alih `<rect>` SVG yang dianimasikan JS per frame; jeda di luar viewport;
-  reduced motion → grid statis. Props API sama.
+  reduced motion → grid statis. Props API sama + prop opsional `animateMedia` (media query;
+  di luar query hanya grid statis — hero memakai `(min-width: 768px)`).
 
 ## shadcn/ui (`src/components/ui/`)
 

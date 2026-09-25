@@ -13,12 +13,16 @@ export function Hero() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           <AnimatedGridPattern
             numSquares={24}
+            animateMedia="(min-width: 768px)"
             maxOpacity={0.25}
             duration={3}
             className="mask-[radial-gradient(640px_circle_at_50%_30%,white,transparent)]"
           />
-          <div className="animate-hero-orb absolute -top-24 left-[8%] size-72 rounded-full bg-primary/20 blur-3xl motion-reduce:animate-none" />
-          <div className="animate-hero-orb absolute top-40 right-[6%] size-80 rounded-full bg-accent/15 blur-3xl [animation-delay:-4.5s] motion-reduce:animate-none" />
+          {/* Mobile (<768px): gradien statis — tanpa gerak ambient (hemat CPU/baterai, skor
+              Lighthouse mobile; keputusan user 2026-09-25). Desktop: orb blur bergerak. */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_45%_at_15%_0%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%),radial-gradient(ellipse_70%_40%_at_100%_35%,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_70%)] md:hidden" />
+          <div className="animate-hero-orb absolute -top-24 left-[8%] hidden size-72 rounded-full bg-primary/20 blur-3xl motion-reduce:animate-none md:block" />
+          <div className="animate-hero-orb absolute top-40 right-[6%] hidden size-80 rounded-full bg-accent/15 blur-3xl [animation-delay:-4.5s] motion-reduce:animate-none md:block" />
         </div>
 
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-16 pb-20 sm:px-6 md:pt-24 lg:grid-cols-[1.15fr_0.85fr] lg:pb-28">

@@ -11,11 +11,11 @@
  * garis grid tetap SVG statis, sedangkan kotak berkedip dirender sebagai elemen HTML absolut
  * dengan CSS keyframes opacity (dijalankan compositor, tanpa JS per frame). Posisi acak baru
  * tetap diambil saat siklus selesai (animationend), seperti upstream. Animasi dijeda saat di luar
- * viewport; reduced motion → hanya grid statis. Props API sama dengan upstream. Hook motion/react
+ * viewport; reduced motion atau di luar `animateMedia` → hanya grid statis. Props API sama dengan upstream. Hook motion/react
  * diganti hook kecil lokal (src/lib/use-motion-prefs.ts) agar Motion tidak masuk JS awal.
  */
 import { useCallback, useEffect, useId, useRef, useState, type ComponentPropsWithoutRef } from "react";
-import { useIsVisible, usePrefersReducedMotion } from "@/lib/use-motion-prefs";
+import { useIsVisible, useMediaQuery, usePrefersReducedMotion } from "@/lib/use-motion-prefs";
 import { cn } from "@/lib/utils";
 
 export interface AnimatedGridPatternProps extends ComponentPropsWithoutRef<"div"> {
@@ -29,6 +29,11 @@ export interface AnimatedGridPatternProps extends ComponentPropsWithoutRef<"div"
   /** Detik untuk fade-in (fade-out sama panjang), seperti upstream. */
   duration?: number;
   repeatDelay?: number;
+  /**
+   * (Tambahan template) Media query agar kotak berkedip aktif, mis. "(min-width: 768px)".
+   * Di luar query hanya grid statis yang dirender (hemat CPU mobile). Default: selalu aktif.
+   */
+  animateMedia?: string;
 }
 
 type Square = { id: number; pos: [number, number]; iteration: number };
@@ -44,11 +49,14 @@ export function AnimatedGridPattern({
   maxOpacity = 0.5,
   duration = 4,
   repeatDelay = 0.5,
+  animateMedia,
   style,
   ...props
 }: AnimatedGridPatternProps) {
   const id = useId();
-  const reduce = usePrefersReducedMotion() !== false;
+  const mediaOk = useMediaQuery(animateMedia) === true;
+  // "reduce" = jangan animasikan: reduced motion, media query tidak cocok, atau belum diketahui (SSR).
+  const reduce = usePrefersReducedMotion() !== false || !mediaOk;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inView = useIsVisible(containerRef);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });

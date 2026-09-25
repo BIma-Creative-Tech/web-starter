@@ -24,6 +24,23 @@ export function usePrefersReducedMotion(): boolean | null {
   );
 }
 
+/**
+ * true bila media query cocok (mis. "(min-width: 768px)"). Server: null (belum diketahui).
+ * Query undefined → selalu true.
+ */
+export function useMediaQuery(query: string | undefined): boolean | null {
+  return useSyncExternalStore(
+    (cb) => {
+      if (!query) return () => {};
+      const mq = window.matchMedia(query);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => (query ? window.matchMedia(query).matches : true),
+    () => null,
+  );
+}
+
 /** true selama elemen berada di viewport (IntersectionObserver). */
 export function useIsVisible(ref: RefObject<Element | null>, rootMargin = "0px"): boolean {
   const [visible, setVisible] = useState(false);

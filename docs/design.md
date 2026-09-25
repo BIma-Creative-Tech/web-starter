@@ -56,10 +56,10 @@ Heading `text-wrap: balance`, body 16px / line-height 1.6.
 | Lapisan | Library | Perilaku | Reduced motion |
 |---|---|---|---|
 | Intro hero (badge, garis bawah, CTA, kartu) | **anime.js 4.5.0** `createTimeline` + `stagger`, `createScope` (import modular, dinamis) | sekali, ±1.5 dtk | dilewati (`scope.matches`), elemen tampil via CSS |
-| Gerak ambient (orb, kartu melayang) | CSS keyframes (compositor) | loop pelan | `motion-reduce:animate-none` |
+| Gerak ambient (orb, kartu melayang) | CSS keyframes (compositor) | loop pelan; **hanya ≥ 768px** — mobile memakai gradien statis (keputusan user 2026-09-25) | `motion-reduce:animate-none` |
 | Scroll reveal section | **Motion 13.4.3** `inView` + `animate` (import dinamis) | fade + naik 24px, sekali | tidak dijalankan |
 | Angka statistik | Number Ticker (spring Motion) | saat masuk viewport | nilai akhir langsung |
-| Grid latar hero | Animated Grid Pattern (CSS opacity) | kotak berkedip, jeda di luar viewport | grid statis |
+| Grid latar hero | Animated Grid Pattern (CSS opacity) | kotak berkedip hanya ≥ 768px (`animateMedia`), jeda di luar viewport; mobile = grid statis | grid statis |
 | Testimoni | Marquee CSS | loop; **tombol jeda**, jeda saat hover/fokus | mati, 1 salinan, scroll manual |
 | Global | `<MotionConfig reducedMotion="user">` | berlaku untuk semua `m.*` Motion | — |
 
