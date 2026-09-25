@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { contactPage } from "@/config/content";
-import { HONEYPOT_FIELD } from "@/lib/contact-schema";
+import { HONEYPOT_FIELD } from "@/lib/contact-constants";
 
 type Field = "name" | "email" | "phone" | "subject" | "message";
 type FieldErrors = Partial<Record<Field, string>>;

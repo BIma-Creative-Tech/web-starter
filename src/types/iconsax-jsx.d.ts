@@ -2,7 +2,9 @@ import type { DetailedHTMLProps, HTMLAttributes } from "react";
 
 /** Tipe JSX untuk web component resmi Iconsax `<iconsax-icon>` (React 19 custom elements). */
 type IconsaxIconAttributes = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
-  name: string;
+  /** Opsional: di template diisi dari `data-name` oleh IconsaxLoader setelah registry siap. */
+  name?: string;
+  "data-name"?: string;
   type?: "linear" | "outline" | "bold" | "bulk" | "broken" | "twotone";
   size?: string | number;
   color?: string;

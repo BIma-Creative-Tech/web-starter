@@ -1,28 +1,44 @@
 "use client";
 
 import { useEffect } from "react";
-import { markIconsReady } from "@/components/iconsax-registry";
+import { onIdle } from "@/lib/idle";
+
+const SELECTOR = "iconsax-icon[data-name]:not([name])";
+
+function activate(root: ParentNode) {
+  root.querySelectorAll<HTMLElement>(SELECTOR).forEach((el) => {
+    el.setAttribute("name", el.dataset.name ?? "");
+  });
+}
 
 /**
- * Mendaftarkan web component resmi <iconsax-icon> HANYA di browser, lalu mendaftarkan subset
- * ikon gratis (src/generated/iconsax-icons.json, hasil scripts/iconsax-subset.mjs) lewat API
- * publik paket `registerProIcons()`.
+ * Mendaftarkan web component resmi <iconsax-icon> HANYA di browser, saat idle (di luar jendela
+ * TBT), lalu subset ikon gratis (src/generated/iconsax-icons.json, hasil
+ * scripts/iconsax-subset.mjs) via API publik paket `registerProIcons()`, lalu mengaktifkan ikon
+ * (menyalin `data-name` → `name`). MutationObserver mengaktifkan ikon yang muncul kemudian
+ * (navigasi client, form terkirim, toggle tema).
  *
  * - Import statis `import "iconsax"` tidak bisa: modul paket mengevaluasi
- *   `class … extends HTMLElement` di top-level → SSR gagal (ReferenceError, terbukti di smoke test).
+ *   `class … extends HTMLElement` di top-level → SSR gagal (ReferenceError, terbukti).
  * - Loader data gratis bawaan paket rusak di Turbopack (selalu memuat ai.json) → dipakai subset.
- * Dipasang sekali di root layout; kedua modul dimuat lazy (tidak menambah JS awal).
  */
 export function IconsaxLoader() {
   useEffect(() => {
     let cancelled = false;
-    void Promise.all([import("iconsax"), import("@/generated/iconsax-icons.json")]).then(([mod, icons]) => {
-      if (cancelled) return;
-      mod.registerProIcons(icons.default as Record<string, Record<string, string>>);
-      markIconsReady();
+    let observer: MutationObserver | undefined;
+    const cancelIdle = onIdle(() => {
+      void Promise.all([import("iconsax"), import("@/generated/iconsax-icons.json")]).then(([mod, icons]) => {
+        if (cancelled) return;
+        mod.registerProIcons(icons.default as Record<string, Record<string, string>>);
+        activate(document);
+        observer = new MutationObserver(() => activate(document));
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
     });
     return () => {
       cancelled = true;
+      cancelIdle();
+      observer?.disconnect();
     };
   }, []);
   return null;

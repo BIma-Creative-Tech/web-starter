@@ -33,15 +33,18 @@ Ditolak/tidak dipakai: **Border Beam** (MIT, author sama) — menganimasikan `of
 
 - **Semua**: warna hard-coded (`neutral-*`, `black/white`, `gray-400`) → token brand (kontras ≥ 4.5:1);
   gaya kode disesuaikan (prettier/eslint repo ini).
-- **Marquee**: salinan ke-2..n `aria-hidden`; prop `paused` + tombol jeda di section (WCAG 2.2.2);
+- **Marquee**: salinan ke-2..n `aria-hidden`; prop `paused` / atribut ancestor `data-marquee-paused`
+  + tombol jeda (pulau client kecil) di section (WCAG 2.2.2);
   jeda saat hover **dan** fokus keyboard; reduced motion → animasi mati, satu salinan, bisa di-scroll.
 - **Bento Grid**: ikon Iconsax; CTA juga tampil saat `focus-within` (bukan hover saja); grid
   responsif 1→2→3 kolom; permukaan kartu memakai utilitas `surface` (preset glass/solid).
 - **Number Ticker**: SSR merender nilai akhir (tanpa JS/crawler melihat angka benar), angka animasi
-  `aria-hidden` + `sr-only`; locale `id-ID`; spring yang sama (damping 60, stiffness 100) dijalankan
-  via `animate()` Motion yang di-import dinamis (bukan `useSpring`) — alasan performa terukur.
+  `aria-hidden` + `sr-only`; locale `id-ID`; **server component** — spring yang sama (damping 60,
+  stiffness 100) dijalankan oleh `<ScrollEnhancer>` via `animate()` Motion yang di-import dinamis saat
+  angka terlihat (bukan `useSpring` per instance) — alasan performa terukur.
 - **Animated Grid Pattern**: kotak berkedip dirender sebagai elemen HTML + CSS keyframes opacity
-  (compositor) alih-alih `<rect>` SVG yang dianimasikan JS per frame; jeda di luar viewport;
+  (compositor) alih-alih `<rect>` SVG yang dianimasikan JS per frame; grid SVG server-rendered,
+  kotak = pulau client (`animated-grid-squares.tsx`) yang mulai saat idle; jeda di luar viewport;
   reduced motion → grid statis. Props API sama + prop opsional `animateMedia` (media query;
   di luar query hanya grid statis — hero memakai `(min-width: 768px)`).
 

@@ -51,7 +51,7 @@ export function Hero() {
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">{hero.description}</p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <span data-hero-init="cta">
+              <span data-hero-init="cta" className="inline-flex">
                 <Button asChild size="lg">
                   <Link href={hero.primaryCta.href}>
                     {hero.primaryCta.label}
@@ -59,7 +59,7 @@ export function Hero() {
                   </Link>
                 </Button>
               </span>
-              <span data-hero-init="cta">
+              <span data-hero-init="cta" className="inline-flex">
                 <Button asChild size="lg" variant="outline">
                   <Link href={hero.secondaryCta.href}>{hero.secondaryCta.label}</Link>
                 </Button>

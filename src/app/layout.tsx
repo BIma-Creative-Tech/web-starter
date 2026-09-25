@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { connection } from "next/server";
 import { brand, fontBody, fontHeading } from "@/config/brand";
 import { IconsaxLoader } from "@/components/iconsax-loader";
-import { MotionProvider } from "@/components/motion-provider";
+import { ScrollEnhancer } from "@/components/scroll-enhancer";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getEnv } from "@/lib/env";
@@ -66,12 +66,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Lewati ke konten utama
         </a>
-        <MotionProvider>
-          <SiteHeader theme={theme} />
-          <main id="konten">{children}</main>
-          <SiteFooter />
-        </MotionProvider>
+        <SiteHeader theme={theme} />
+        <main id="konten">{children}</main>
+        <SiteFooter />
+        {/* Pulau client tanpa UI: ikon & animasi scroll, keduanya mulai saat idle. */}
         <IconsaxLoader />
+        <ScrollEnhancer />
       </body>
     </html>
   );

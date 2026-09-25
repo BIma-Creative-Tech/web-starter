@@ -5,7 +5,8 @@
  * Detail provenance & perubahan: COMPONENTS.md.
  *
  * Adaptasi: salinan konten ke-2..n `aria-hidden` (pembaca layar hanya membaca sekali);
- * prop `paused` (kontrol jeda eksplisit, WCAG 2.2.2); jeda saat hover/fokus; reduced motion →
+ * prop `paused` dan/atau atribut `data-marquee-paused="true"` pada ancestor (kontrol jeda eksplisit,
+ * WCAG 2.2.2 — lihat MarqueePauseButton); jeda saat hover/fokus; reduced motion →
  * animasi mati, hanya salinan pertama yang tampil dan bisa di-scroll horizontal.
  */
 import { type ComponentPropsWithoutRef } from "react";
@@ -49,6 +50,7 @@ export function Marquee({
             vertical ? "animate-marquee-vertical flex-col" : "animate-marquee flex-row",
             pauseOnHover && "group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]",
             paused && "[animation-play-state:paused]",
+            "[[data-marquee-paused=true]_&]:[animation-play-state:paused]",
             reverse && "[animation-direction:reverse]",
             i > 0 && "motion-reduce:hidden",
           )}

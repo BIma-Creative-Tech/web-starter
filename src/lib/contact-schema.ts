@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { HONEYPOT_FIELD } from "@/lib/contact-constants";
 
 /** Validasi form kontak (server-side, CLAUDE.md §3.6). Pesan error berbahasa Indonesia. */
 
 /** Nama field honeypot — harus kosong; diisi = bot. Nama dibuat tidak mencurigakan bagi bot. */
-export const HONEYPOT_FIELD = "website";
+export { HONEYPOT_FIELD };
 
 // Tolak CR/LF di field satu baris (mencegah header injection bila dipakai di header email).
 const singleLine = (max: number, label: string) =>

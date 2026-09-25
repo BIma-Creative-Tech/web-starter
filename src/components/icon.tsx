@@ -1,14 +1,14 @@
-"use client";
-
 /**
- * Wrapper React bertipe untuk web component resmi Iconsax (`iconsax@0.1.1`, MIT).
- * Registrasi & data ikon: <IconsaxLoader> (root layout) — lihat komentar di sana.
- * Atribut `pro` = ambil SVG dari registry lokal (`registerProIcons`), BUKAN ikon berbayar:
- * isinya subset ikon GRATIS dari data paket. Jangan jalankan `npx iconsax sync`.
- * Ukuran dipesan lewat wrapper ber-dimensi tetap → tidak ada layout shift (CLS).
+ * Wrapper bertipe untuk web component resmi Iconsax (`iconsax@0.1.1`, MIT).
+ * Bukan client component (tanpa hook) → tidak menambah JS hydration; bisa dipakai di server
+ * maupun client component.
+ *
+ * Nama ikon dirender sebagai `data-name` (bukan `name`): <IconsaxLoader> (root layout) saat idle
+ * mendaftarkan subset ikon GRATIS via `registerProIcons()` lalu menyalin `data-name` → `name`,
+ * sehingga custom element baru me-render setelah registry siap (tanpa peringatan "not resolved").
+ * Atribut `pro` = ambil SVG dari registry lokal, BUKAN ikon berbayar. Jangan jalankan
+ * `npx iconsax sync`. Ukuran dipesan lewat wrapper ber-dimensi tetap → tidak ada layout shift.
  */
-import { useSyncExternalStore } from "react";
-import { getIconsReady, getIconsReadyServer, subscribeIcons } from "@/components/iconsax-registry";
 import type { IconName, IconStyle } from "@/components/icon-names";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +26,6 @@ type IconProps = {
 };
 
 export function Icon({ name, type = "linear", size = 24, color = "currentColor", label, className }: IconProps) {
-  const ready = useSyncExternalStore(subscribeIcons, getIconsReady, getIconsReadyServer);
   return (
     <span
       className={cn("inline-flex shrink-0 items-center justify-center", className)}
@@ -35,7 +34,7 @@ export function Icon({ name, type = "linear", size = 24, color = "currentColor",
       aria-label={label}
       aria-hidden={label ? undefined : true}
     >
-      {ready ? <iconsax-icon pro="" name={name} type={type} size={String(size)} color={color} /> : null}
+      <iconsax-icon pro="" data-name={name} type={type} size={String(size)} color={color} />
     </span>
   );
 }

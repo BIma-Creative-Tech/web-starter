@@ -55,18 +55,23 @@ Heading `text-wrap: balance`, body 16px / line-height 1.6.
 
 | Lapisan | Library | Perilaku | Reduced motion |
 |---|---|---|---|
-| Intro hero (badge, garis bawah, CTA, kartu) | **anime.js 4.5.0** `createTimeline` + `stagger`, `createScope` (import modular, dinamis) | sekali, ±1.5 dtk | dilewati (`scope.matches`), elemen tampil via CSS |
+| Intro hero (garis bawah digambar, lift singkat badge/CTA/kartu) | **anime.js 4.5.0** `createTimeline` + `stagger`, `createScope` (subpath modular, import dinamis, **mulai saat idle**) | sekali; teks hero TIDAK disembunyikan (LCP tidak menunggu JS) | dilewati (`scope.matches`) |
 | Gerak ambient (orb, kartu melayang) | CSS keyframes (compositor) | loop pelan; **hanya ≥ 768px** — mobile memakai gradien statis (keputusan user 2026-09-25) | `motion-reduce:animate-none` |
-| Scroll reveal section | **Motion 13.4.3** `inView` + `animate` (import dinamis) | fade + naik 24px, sekali | tidak dijalankan |
-| Angka statistik | Number Ticker (spring Motion) | saat masuk viewport | nilai akhir langsung |
-| Grid latar hero | Animated Grid Pattern (CSS opacity) | kotak berkedip hanya ≥ 768px (`animateMedia`), jeda di luar viewport; mobile = grid statis | grid statis |
-| Testimoni | Marquee CSS | loop; **tombol jeda**, jeda saat hover/fokus | mati, 1 salinan, scroll manual |
-| Global | `<MotionConfig reducedMotion="user">` | berlaku untuk semua `m.*` Motion | — |
+| Scroll reveal section | CSS transition (opacity + transform), dipicu `<ScrollEnhancer>` (IntersectionObserver, mulai saat idle) | fade + naik 24px, sekali | tidak dijalankan |
+| Angka statistik | Number Ticker — spring **Motion 13.4.3** `animate()` (import dinamis saat terlihat) | saat masuk viewport | nilai akhir langsung |
+| Grid latar hero | Animated Grid Pattern: grid SVG server-rendered + pulau client kotak berkedip (CSS opacity), mulai saat idle, hanya ≥ 768px | jeda di luar viewport; mobile = grid statis | grid statis |
+| Testimoni | Marquee CSS (server) + tombol jeda (pulau client kecil) | loop; jeda via tombol / hover / fokus | mati, 1 salinan, scroll manual |
 
-Hanya `transform`/`opacity` yang dianimasikan. Elemen hero yang dianimasikan disembunyikan hanya
-bila `@media (scripting: enabled) and (prefers-reduced-motion: no-preference)`, dengan fallback CSS
-(muncul setelah 2.5 dtk bila JS gagal). Reveal hanya menyembunyikan elemen yang sudah "armed" oleh
-JS dan masih di luar viewport → tanpa JS semua konten tampil.
+**Hydration minimal (W1c, 2026-09-25):** section landing adalah server component; JS client hanya
+untuk pulau kecil (toggle tema, tombol jeda, kotak grid, animator hero, loader ikon, ScrollEnhancer,
+form kontak). Motion tidak lagi ada di bundle awal (`<MotionConfig>` dihapus karena tidak ada
+komponen `m.*` lagi; reduced motion ditangani per lapisan seperti tabel di atas). Kerja non-kritis
+(anime.js, ikon, reveal, grid) dimulai via `requestIdleCallback` (fallback `setTimeout`).
+
+Hanya `transform`/`opacity` yang dianimasikan. Teks hero tidak pernah disembunyikan; hanya garis
+bawah dekoratif yang mulai dari `scaleX(0)` (dengan fallback CSS 2.5 dtk). Reveal hanya
+menyembunyikan elemen yang sudah "armed" oleh JS dan masih di luar viewport → tanpa JS semua
+konten tampil.
 
 Aksesibilitas lain: skip link, landmark (`header/nav/main/footer`), satu `h1` per halaman,
 fokus terlihat (`outline` ring), target sentuh ≥ 44 px, label form eksplisit, error per field
@@ -87,8 +92,9 @@ implementasi (terbukti, bukan asumsi):
    ikon di luar kategori "ai" tidak pernah tampil. Solusi: `scripts/iconsax-subset.mjs` mengekstrak
    hanya ikon/gaya yang dipakai (`src/components/icon-names.ts`) dari data paket ke
    `src/generated/iconsax-icons.json` (±51 KB mentah untuk 16 ikon × 3 gaya), didaftarkan dengan API
-   publik paket `registerProIcons()` dan dirender dengan atribut `pro` (= "ambil dari registry
-   lokal"; isinya tetap ikon GRATIS). Bonus: tidak ada lagi unduhan ±180 KB JSON kategori.
+   publik paket `registerProIcons()` (saat idle) dan dirender dengan atribut `pro` (= "ambil dari
+   registry lokal"; isinya tetap ikon GRATIS). `<Icon>` bukan client component: server merender
+   `data-name`, loader menyalinnya ke `name` setelah registry siap (MutationObserver untuk elemen baru). Bonus: tidak ada lagi unduhan ±180 KB JSON kategori.
    **Jangan jalankan `npx iconsax sync`** (itu untuk ikon Pro berbayar).
 
 ## 7. Performa — hasil pengukuran (Lighthouse 13.5.0 mobile, lokal)

@@ -195,23 +195,27 @@
 }
 
 /*
- * Status awal elemen hero yang dianimasikan anime.js (src/components/hero/hero-animator.tsx).
- * Hanya berlaku bila JS aktif DAN pengguna tidak meminta reduced motion; tanpa JS / reduced
- * motion konten langsung tampil. Fallback CSS: bila JS gagal, elemen tetap muncul setelah 2.5 dtk.
+ * Intro hero (src/components/hero/hero-animator.tsx, anime.js, mulai saat idle). TEKS HERO TIDAK
+ * PERNAH disembunyikan (LCP tidak menunggu JS). Hanya garis bawah dekoratif yang mulai dari
+ * scaleX(0) — bila JS aktif & tanpa reduced motion — dengan fallback CSS (tampil penuh setelah
+ * 2.5 dtk bila JS gagal).
  */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  [data-hero-init] {
-    opacity: 0;
+  [data-hero-init="underline"] {
+    transform: scaleX(0);
     animation: hero-fallback 0.4s ease-out 2.5s forwards;
   }
-  [data-hero-init="underline"] {
-    opacity: 1;
-    transform: scaleX(0);
-  }
 }
-/* Reveal (src/components/reveal.tsx): hanya elemen yang sudah "armed" oleh JS yang disembunyikan. */
-[data-reveal="armed"] {
+
+/* Reveal (src/components/reveal.tsx + scroll-enhancer.tsx): transisi CSS, hanya elemen "armed". */
+[data-reveal-state] {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s);
+}
+[data-reveal-state="armed"] {
   opacity: 0;
+  transform: translateY(24px);
 }
 
 @keyframes hero-fallback {

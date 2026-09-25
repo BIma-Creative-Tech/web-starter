@@ -1,7 +1,5 @@
-"use client";
-
-import { useState } from "react";
 import { testimonials } from "@/config/content";
+import { MarqueePauseButton } from "@/components/sections/marquee-pause-button";
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Marquee } from "@/components/ui-21st/marquee";
@@ -37,7 +35,6 @@ function TestimonialCard({ item }: { item: Item }) {
 }
 
 export function Testimonials() {
-  const [paused, setPaused] = useState(false);
   const half = Math.ceil(testimonials.items.length / 2);
   const rows = [testimonials.items.slice(0, half), testimonials.items.slice(half)];
 
@@ -48,19 +45,13 @@ export function Testimonials() {
           <SectionHeading id="testimoni-title" eyebrow={testimonials.eyebrow} title={testimonials.title} />
         </Reveal>
         <div className="mt-6 flex justify-center motion-reduce:hidden">
-          <button
-            type="button"
-            onClick={() => setPaused((p) => !p)}
-            aria-pressed={paused}
-            className="inline-flex min-h-11 items-center rounded-full border border-border px-4 text-sm font-medium transition-colors duration-200 hover:bg-muted"
-          >
-            {paused ? "Putar animasi testimoni" : "Jeda animasi testimoni"}
-          </button>
+          <MarqueePauseButton targetId="testimoni-marquee" />
         </div>
       </div>
-      <div className="relative mt-8">
+      {/* Server component: hanya tombol jeda yang client (pulau kecil). */}
+      <div id="testimoni-marquee" className="relative mt-8">
         {rows.map((row, i) => (
-          <Marquee key={i} pauseOnHover paused={paused} reverse={i === 1} repeat={3} className="[--duration:50s]">
+          <Marquee key={i} pauseOnHover reverse={i === 1} repeat={3} className="[--duration:50s]">
             {row.map((item) => (
               <TestimonialCard key={item.name} item={item} />
             ))}
