@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/*
+ * Mode gelap: ikut sistem (prefers-color-scheme) kecuali pengguna memilih lewat toggle
+ * (<html data-theme="light|dark">, disimpan di cookie → dirender server, tanpa kedip).
+ */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+
+  --font-sans: var(--font-brand-body), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-brand-heading), var(--font-brand-body), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+
+  /* 21st.dev / Magic UI Marquee (COMPONENTS.md) */
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  /* Gerak ambient hero (compositor-only: transform). */
+  --animate-hero-float: hero-float 4.2s ease-in-out infinite alternate;
+  --animate-hero-orb: hero-orb 9s ease-in-out infinite alternate;
+  /* AnimatedGridPattern (adaptasi, COMPONENTS.md): durasi di-set inline per kotak. */
+  --animate-grid-square: grid-square 9s ease-in-out 1 both;
+}
+
+@keyframes grid-square {
+  0% { opacity: 0; }
+  45% { opacity: 1; }
+  55% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes hero-float {
+  from { transform: translateY(-6px); }
+  to { transform: translateY(6px); }
+}
+@keyframes hero-orb {
+  from { transform: translate3d(-24px, 12px, 0) scale(1); }
+  to { transform: translate3d(24px, -12px, 0) scale(1.08); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap))); }
+}
+@keyframes marquee-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% - var(--gap))); }
+}
+
+/* Token semantik ← nilai brand (di-set inline di <html> dari src/config/brand.ts). */
+:root {
+  color-scheme: light;
+  --background: var(--brand-light-background);
+  --foreground: var(--brand-light-foreground);
+  --card: var(--brand-light-card);
+  --card-foreground: var(--brand-light-card-foreground);
+  --primary: var(--brand-light-primary);
+  --primary-foreground: var(--brand-light-primary-foreground);
+  --secondary: var(--brand-light-secondary);
+  --secondary-foreground: var(--brand-light-secondary-foreground);
+  --accent: var(--brand-light-accent);
+  --accent-foreground: var(--brand-light-accent-foreground);
+  --muted: var(--brand-light-muted);
+  --muted-foreground: var(--brand-light-muted-foreground);
+  --border: var(--brand-light-border);
+  --input: var(--brand-light-input);
+  --ring: var(--brand-light-ring);
+  --destructive: var(--brand-light-destructive);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --background: var(--brand-dark-background);
+    --foreground: var(--brand-dark-foreground);
+    --card: var(--brand-dark-card);
+    --card-foreground: var(--brand-dark-card-foreground);
+    --primary: var(--brand-dark-primary);
+    --primary-foreground: var(--brand-dark-primary-foreground);
+    --secondary: var(--brand-dark-secondary);
+    --secondary-foreground: var(--brand-dark-secondary-foreground);
+    --accent: var(--brand-dark-accent);
+    --accent-foreground: var(--brand-dark-accent-foreground);
+    --muted: var(--brand-dark-muted);
+    --muted-foreground: var(--brand-dark-muted-foreground);
+    --border: var(--brand-dark-border);
+    --input: var(--brand-dark-input);
+    --ring: var(--brand-dark-ring);
+    --destructive: var(--brand-dark-destructive);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: var(--brand-dark-background);
+  --foreground: var(--brand-dark-foreground);
+  --card: var(--brand-dark-card);
+  --card-foreground: var(--brand-dark-card-foreground);
+  --primary: var(--brand-dark-primary);
+  --primary-foreground: var(--brand-dark-primary-foreground);
+  --secondary: var(--brand-dark-secondary);
+  --secondary-foreground: var(--brand-dark-secondary-foreground);
+  --accent: var(--brand-dark-accent);
+  --accent-foreground: var(--brand-dark-accent-foreground);
+  --muted: var(--brand-dark-muted);
+  --muted-foreground: var(--brand-dark-muted-foreground);
+  --border: var(--brand-dark-border);
+  --input: var(--brand-dark-input);
+  --ring: var(--brand-dark-ring);
+  --destructive: var(--brand-dark-destructive);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  a, button, [role="button"], summary, label[for] {
+    cursor: pointer;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+  /* Jangkar (#layanan) tidak tertutup header sticky. */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+}
+
+/* Permukaan kartu/header sesuai preset gaya brand (<body data-style>). */
+@utility surface {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  :where([data-style="glass"]) & {
+    background-color: color-mix(in oklab, var(--card) 72%, transparent);
+    border-color: color-mix(in oklab, var(--border) 80%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+}
+
+/*
+ * Status awal elemen hero yang dianimasikan anime.js (src/components/hero/hero-animator.tsx).
+ * Hanya berlaku bila JS aktif DAN pengguna tidak meminta reduced motion; tanpa JS / reduced
+ * motion konten langsung tampil. Fallback CSS: bila JS gagal, elemen tetap muncul setelah 2.5 dtk.
+ */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-hero-init] {
+    opacity: 0;
+    animation: hero-fallback 0.4s ease-out 2.5s forwards;
+  }
+  [data-hero-init="underline"] {
+    opacity: 1;
+    transform: scaleX(0);
+  }
+}
+/* Reveal (src/components/reveal.tsx): hanya elemen yang sudah "armed" oleh JS yang disembunyikan. */
+[data-reveal="armed"] {
+  opacity: 0;
+}
+
+@keyframes hero-fallback {
+  to { opacity: 1; transform: none; }
+}
