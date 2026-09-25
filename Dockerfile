@@ -47,7 +47,9 @@ COPY --from=build --chown=root:root /app/.next/static ./.next/static
 COPY --from=build --chown=root:root /app/public ./public
 
 # File aplikasi milik root (read-only bagi uid 1001). Cache Next → tmpfs di compose.
-RUN mkdir -p /app/.next/cache && chown nextjs:nextjs /app/.next/cache
+# Mode 1777 (seperti /tmp): `--tmpfs /app/.next/cache` menyalin MODE direktori image tetapi
+# pemiliknya root:root — dengan 755 uid 1001 tidak bisa menulis (terbukti di smoke test).
+RUN mkdir -p /app/.next/cache && chown nextjs:nextjs /app/.next/cache && chmod 1777 /app/.next/cache
 
 USER 1001:1001
 EXPOSE 3000
