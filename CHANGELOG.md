@@ -5,13 +5,24 @@ Semua perubahan penting pada repo `web-starter` dicatat di file ini.
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dan proyek ini
 memakai [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Versi = `version` di
 `package.json`; tag git `vX.Y.Z` (annotated) harus sama dengan versi itu — CI menolak tag yang
-berbeda dan mem-push image `ghcr.io/bctech-adm/web-starter:X.Y.Z`. Commit memakai Conventional
+berbeda dan mem-push image `ghcr.io/bima-creative-tech/web-starter:X.Y.Z`. Commit memakai Conventional
 Commits (`feat` = minor, `fix`/`perf` = patch, `BREAKING CHANGE` = major).
 
 Keputusan stack & lisensi: repo `infra` `docs/adr/0007-web-client-ui-stack.md`; asal-usul
 komponen pihak ketiga: `COMPONENTS.md`.
 
 ## [Unreleased]
+
+### Security
+
+- `next` 16.3.6 → 16.3.8 (CVE-2026-94483), `sharp` 0.35.4 → 0.35.5 (GHSA-wq5f-xc86-pv6w),
+  `source-map-js` 1.2.1 → 1.2.2 (CVE-2026-93749) — CI terjadwal merah 2026-10-12 (PR #1).
+
+### Changed
+
+- Image GHCR pindah ke `ghcr.io/bima-creative-tech/web-starter` (repo pindah ke org
+  BIma-Creative-Tech; push ke `ghcr.io/bctech-adm/*` ditolak `permission_denied`). README
+  (langkah membuat `web-<slug>`) dan tautan CHANGELOG ikut diganti.
 
 ## [0.1.0] - 2026-09-25
 
@@ -62,5 +73,5 @@ Rilis pertama template website client (plan 03 infra, task W1–W4). Demo:
 - Form kontak: pemeriksaan Origin + body JSON/multipart saja, tanpa token CSRF (website tanpa
   session; keputusan Lead).
 
-[Unreleased]: https://github.com/bctech-adm/web-starter/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/bctech-adm/web-starter/releases/tag/v0.1.0
+[Unreleased]: https://github.com/BIma-Creative-Tech/web-starter/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/BIma-Creative-Tech/web-starter/releases/tag/v0.1.0
