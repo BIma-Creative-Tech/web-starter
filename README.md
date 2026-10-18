@@ -22,15 +22,15 @@ Dokumen terkait: [`docs/design.md`](docs/design.md) (keputusan desain via ui-ux-
 
 ```bash
 # 1. Salin template (tanpa history), buat repo baru
-git clone --depth 1 git@github-web-starter:bctech-adm/web-starter.git web-<slug>
+git clone --depth 1 git@github-web-starter:BIma-Creative-Tech/web-starter.git web-<slug>
 cd web-<slug> && rm -rf .git && git init -b main && git config core.hooksPath .githooks
 # 2. Ganti nama paket & image
 sed -i 's/"name": "web-starter"/"name": "web-<slug>"/' package.json
-sed -i 's#ghcr.io/bctech-adm/web-starter#ghcr.io/bctech-adm/web-<slug>#' .github/workflows/ci.yml
+sed -i 's#ghcr.io/bima-creative-tech/web-starter#ghcr.io/bima-creative-tech/web-<slug>#' .github/workflows/ci.yml
 # 3. Ubah branding (src/config/brand.ts) dan konten (src/config/content.ts)
 # 4. npm ci && npm run lint && npm run typecheck && npm test   (lihat "Menjalankan lokal")
 git add -A && git commit -m "feat: initial web-<slug> from web-starter"
-git remote add origin git@github-web-<slug>:bctech-adm/web-<slug>.git
+git remote add origin git@github-web-<slug>:BIma-Creative-Tech/web-<slug>.git
 ```
 
 ## Mengubah branding (satu tempat)
@@ -111,6 +111,6 @@ Image tanpa npm/devDeps/`sharp` (optimasi `next/image` dimatikan: `images.unopti
 
 actionlint · gitleaks (full history) · Semgrep (OWASP, TS, JS, React, Next.js, Dockerfile, secrets)
 · Trivy fs + config · Hadolint · lint/typecheck/test/`npm audit --omit=dev`/build · build image →
-Trivy image (gagal HIGH/CRITICAL) → smoke test kontrak → push `ghcr.io/bctech-adm/web-starter`
+Trivy image (gagal HIGH/CRITICAL) → smoke test kontrak → push `ghcr.io/bima-creative-tech/web-starter`
 (`:sha-<12>` di `main`, `:X.Y.Z` untuk tag `vX.Y.Z` yang sama dengan `package.json`).
 Semua action di-pin SHA, semua tool image di-pin digest.
