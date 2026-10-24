@@ -3,7 +3,7 @@
 Template website marketing Next.js untuk client platform (setiap `web-<slug>` dibuat dari repo ini).
 Next.js **16.3.6** (App Router, `output: standalone`) · React 19.3 · TypeScript strict · Tailwind CSS v4 ·
 shadcn/ui · **Motion 13.4.3** · **anime.js 4.5.0** · **Iconsax 0.1.1** (web component resmi) ·
-komponen 21st.dev (Magic UI, MIT). Node 24 · image `node:24.21.0-alpine`.
+komponen 21st.dev (Magic UI, MIT). Node 24 · image `node:24.22.1-alpine`.
 
 Dokumen terkait: [`docs/design.md`](docs/design.md) (keputusan desain via ui-ux-pro-max, performa),
 [`COMPONENTS.md`](COMPONENTS.md) (asal-usul & lisensi komponen yang disalin), plan
@@ -56,11 +56,11 @@ Komponen shadcn baru: `npm run ui:add <nama>` (CLI ter-pin `shadcn@4.21.0`).
 Host VPS tidak punya Node; pakai container (repo di-mount):
 
 ```bash
-docker run --rm -it -v "$PWD:/app" -w /app node:24.21.0-bookworm-slim sh -c '
+docker run --rm -it -v "$PWD:/app" -w /app node:24.22.1-bookworm-slim sh -c '
   npm ci && npm run lint && npm run typecheck && npm test'
 # dev server
 docker run --rm -it -v "$PWD:/app" -w /app -p 127.0.0.1:3000:3000 -e SITE_URL=http://localhost:3000 \
-  node:24.21.0-bookworm-slim npm run dev -- -H 0.0.0.0
+  node:24.22.1-bookworm-slim npm run dev -- -H 0.0.0.0
 ```
 
 Aktifkan hook gitleaks sekali per clone: `git config core.hooksPath .githooks` (butuh Docker).

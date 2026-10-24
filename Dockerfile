@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:1
 # web-starter — website client Next.js 16 (output: standalone).
-# Base `node:24.21.0-alpine` di-pin tag + digest index multi-arch (sama dengan control-plane;
-# diverifikasi 2026-09-25 via `docker buildx imagetools inspect`).
+# Base `node:24.22.1-alpine` di-pin tag + digest index multi-arch (sama dengan control-plane;
+# diverifikasi 2026-10-23 via `docker buildx imagetools inspect`).
 #
 # KONTRAK runtime (dipakai templates/web-client di repo infra):
 #   port 3000 (HOSTNAME=0.0.0.0) · GET /api/health → 200 {"status":"ok"} · uid:gid 1001:1001 ·
 #   rootfs read-only; hanya /tmp dan /app/.next/cache yang writable (tmpfs) ·
 #   env: SITE_URL (wajib), CONTACT_ENABLED, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_FROM_ADDRESS,
 #   SMTP_PASSWORD_FILE.
-ARG NODE_IMAGE=node:24.21.0-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
+ARG NODE_IMAGE=node:24.22.1-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
 
 # ---- deps: dependency lengkap (devDeps dibutuhkan untuk build) ----
 FROM ${NODE_IMAGE} AS deps
