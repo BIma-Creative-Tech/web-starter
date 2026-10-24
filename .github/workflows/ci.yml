@@ -1,4 +1,4 @@
-# CI + release web-starter (Next.js 16 / Node 24, image node:24.21.0-alpine) — plan 03 task W3.
+# CI + release web-starter (Next.js 16 / Node 24, image node:24.22.1-alpine) — plan 03 task W3.
 # Pola dari control-plane/.github/workflows/security.yml. Tool dijalankan sebagai container
 # ter-pin tag+digest; action di-pin ke commit SHA tag rilis resmi (diverifikasi 2026-09-25 via
 # GitHub API `git/ref/tags/<tag>` & `docker buildx imagetools inspect`).
@@ -31,7 +31,7 @@ env:
   SEMGREP_IMAGE: semgrep/semgrep:1.177.0@sha256:acaac22ffc7b7cc5926de0751b223bce0b2491c33d18422fa72f632c78d81198
   TRIVY_IMAGE: aquasec/trivy:0.74.0@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969
   HADOLINT_IMAGE: hadolint/hadolint:v2.15.1@sha256:32dac94127fd60b7b7e3fbfc65e1383b9b5e25c9bfd7b8536de7a539fe68a12d
-  NODE_VERSION: "24.21.0" # sama dengan base image Dockerfile
+  NODE_VERSION: "24.22.1" # sama dengan base image Dockerfile
   NEXT_TELEMETRY_DISABLED: "1"
   IMAGE_NAME: ghcr.io/bima-creative-tech/web-starter
 
